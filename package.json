@@ -1,0 +1,25 @@
+{
+  "name": "koa-web",
+  "version": "1.0.6",
+  "description": "koa web",
+  "main": "lib/app.js",
+  "author": "tphp",
+  "license": "MIT",
+  "repository": "tphp/koa-web",
+  "dependencies": {
+    "nunjucks": "^3.0.0",
+    "koa": "^2.13.0",
+    "koa-static": "^5.0.0",
+    "koa-mount": "^4.0.0"
+  },
+  "keywords": [
+    "koa",
+    "web",
+    "nunjucks",
+    "layout",
+    "static",
+    "mount",
+    "dir",
+    "route"
+  ]
+}

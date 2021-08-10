@@ -1,4 +1,4 @@
-#### 包依赖
+#### 依赖包
 
 - [nunjucks](https://nunjucks.bootcss.com/) 模板引擎
 - [koa](https://koa.bootcss.com/) 框架
@@ -115,7 +115,9 @@ app.listen(3000, () => {
 - /html/hello/world.js
 
 ```js
-module.exports = function (hd) {
+module.exports = async function (hd) {
+
+  // hd.ctx.body = '设置了就只会显示这一段';
 
   // 设置模板页面中函数（nunjucks模板）
   hd.view('sayHello', "hello hello!");
@@ -129,7 +131,6 @@ module.exports = function (hd) {
   // console.log(hd.getKeywords());
   // hd.description('描述');
   // console.log(hd.getDescription());
-
 
   // 动态设置页面内CSS和JS
   hd.style(".body{color:#F00;}"); // style只能在head中
@@ -147,6 +148,7 @@ module.exports = function (hd) {
   return {
     sayWorld: "hello world!"
   };
+  
 }
 ```
 
@@ -187,7 +189,7 @@ module.exports = function (hd) {
 - /html/hello/layout.js
 
 ```js
-module.exports = function (hd) {
+module.exports = async function (hd) {
   hd.view('sayLayout', "hello layout!");
 }
 ```

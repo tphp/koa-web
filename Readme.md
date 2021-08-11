@@ -98,21 +98,21 @@ app.listen(3000, () => {
 
 #### 创建页面DEMO
 
-> - 视图文件：/html/hello/world.html
-> - 模板文件：/html/hello/world.js
-> - 配置文件：/html/hello/world.json
-> - 这3个文件至少存在一个
+- 视图文件：/html/hello/world.html
+- 模板文件：/html/hello/world.js
+- 配置文件：/html/hello/world.json
+- 这3个文件至少存在一个
 
-- /html/hello/world.html
-
-> 更多模板引擎使用 [nunjucks](https://nunjucks.bootcss.com/)
+###### /html/hello/world.html
 
 ```html
 <div>{{ sayHello }}</div>
 <div>{{ sayWorld }}</div>
 ```
 
-- /html/hello/world.js
+###### 更多模板引擎使用 [nunjucks](https://nunjucks.bootcss.com/)
+
+###### /html/hello/world.js
 
 ```js
 module.exports = async function (hd) {
@@ -152,10 +152,10 @@ module.exports = async function (hd) {
 }
 ```
 
-- /html/hello/world.json
+###### /html/hello/world.json
 
-> - layout默认为不设置
-> - css和js可以是字符串或数组
+- layout默认为不设置
+- css和js可以是字符串或数组
 
 ```json
 {
@@ -171,7 +171,7 @@ module.exports = async function (hd) {
 }
 ```
 
-- /html/hello/layout.html
+###### /html/hello/layout.html
 
 ```html
 <!DOCTYPE html>
@@ -186,7 +186,7 @@ module.exports = async function (hd) {
 </html>
 ```
 
-- /html/hello/layout.js
+###### /html/hello/layout.js
 
 ```js
 module.exports = async function (hd) {
@@ -196,7 +196,7 @@ module.exports = async function (hd) {
 
 #### 页面源码效果DEMO
 
-- 访问页面 http://localhost:3000/hello/world 源码如下
+###### 访问页面 http://localhost:3000/hello/world 源码如下
 
 ```html
 <!DOCTYPE html>
@@ -231,4 +231,86 @@ module.exports = async function (hd) {
 </script>
 </body>
 </html>
+```
+
+#### 页面之间的调用 call
+
+###### 创建调用页面
+
+- /html/test/data.html
+
+```html
+<div>{{ sayHello }}</div>
+<div>{{ sayWorld }}</div>
+```
+
+- /html/test/data.js
+
+```js
+module.exports = async function (hd) {
+  return {
+    sayHello: "hello",
+    sayWorld: hd.getView('sayWorld')
+  };
+};
+```
+
+###### 内部使用示例
+
+###### /html/test/call.js
+
+```js
+module.exports = async function (hd) {
+  return await hd.call(
+    'test.data', // 或 'test/data'
+    {
+      sayWorld: "MyWorld"
+    }
+  );
+};
+```
+
+###### 外部使用示例（以koa-route为例）
+
+- 如果koa-web不能满足当下要求时，可与其他路由框架进行结合使用
+
+```js
+const Koa = require("koa");
+const KoaWeb = require('koa-web')
+const router = require("koa-router")();
+
+const app = new Koa();
+
+app.use(KoaWeb({path: __dirname}));
+
+router.get("/route/web", async (ctx, next) => {
+  await next();
+  if (!ctx.body) {
+    let ret = await ctx.app.call(
+      'test.data', // 或 'test/data'
+      {
+        sayWorld: "MyWorld"
+      }
+    );
+    ctx.body = ret;
+  }
+});
+
+app.use(router.routes());
+app.use(router.allowedMethods());
+app.listen(3000, () => {
+  console.log("server is running at http://localhost:3000");
+});
+```
+
+###### 访问以下两个链接
+
+- http://localhost:3000/test/call
+- http://localhost:3000/route/web
+
+###### 其结果相同，预览源码如下
+
+```html
+<div>hello</div>
+<div>MyWorld</div>
 ```

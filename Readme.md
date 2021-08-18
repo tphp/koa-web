@@ -115,9 +115,29 @@ app.listen(3000, () => {
 ###### /html/hello/world.js
 
 ```js
-module.exports = async function (hd) {
+/**
+ * 入口文，hd、data和files都可以不设置
+ * 如 module.exports = async () => {}; 也是可以的
+ * data和files是通过 require("formidable") 实现
+ * hd: 主调用函数
+ * @param {*} hd 
+ * data: form-data、x-www-form-urlencoded和JSON数据会自动转化为该对象
+ * @param {*} data 
+ * files: 只有在form-data类型中产生
+ * @param {*} files 
+ * @returns 
+ */
+module.exports = async (hd, data, files) => {
 
   // hd.ctx.body = '设置了就只会显示这一段';
+  
+  // console.log(data); // data == hd.ctx.app.info.data
+  // console.log(files); // files == hd.ctx.app.info.files
+
+  // hd.ctx.app.info.status: 解析状态
+  // hd.ctx.app.info.errMessage: 解析错误提示
+  // hd.ctx.app.info.body: 原始POST提交字符串
+  // console.log(hd.ctx.app.info); 
 
   // 设置模板页面中函数（nunjucks模板）
   hd.view('sayHello', "hello hello!");
@@ -131,6 +151,7 @@ module.exports = async function (hd) {
   // console.log(hd.getKeywords());
   // hd.description('描述');
   // console.log(hd.getDescription());
+
 
   // 动态设置页面内CSS和JS
   hd.style(".body{color:#F00;}"); // style只能在head中
@@ -148,7 +169,6 @@ module.exports = async function (hd) {
   return {
     sayWorld: "hello world!"
   };
-  
 }
 ```
 
@@ -189,7 +209,7 @@ module.exports = async function (hd) {
 ###### /html/hello/layout.js
 
 ```js
-module.exports = async function (hd) {
+module.exports = async (hd) => {
   hd.view('sayLayout', "hello layout!");
 }
 ```
@@ -247,7 +267,7 @@ module.exports = async function (hd) {
 - /html/test/data.js
 
 ```js
-module.exports = async function (hd) {
+module.exports = async (hd) => {
   return {
     sayHello: "hello",
     sayWorld: hd.getView('sayWorld')
@@ -260,7 +280,7 @@ module.exports = async function (hd) {
 ###### /html/test/call.js
 
 ```js
-module.exports = async function (hd) {
+module.exports = async (hd) => {
   return await hd.call(
     'test.data', // 或 'test/data'
     {

@@ -1,8 +1,18 @@
+## 适合场景
+
+---
+
+- WEB页面开发，开发过程中无需重启服务
+- SEO、CSS和JS设置更轻松
+- 简化了GET和POST请求处理
+- 方便处理简单的压力测试
+
 #### 依赖包
 
-- [nunjucks](https://nunjucks.bootcss.com/) 模板引擎
-- [koa](https://koa.bootcss.com/) 框架
-- koa-static + koa-mount 静态文件处理
+- 应用框架: [koa](https://koa.bootcss.com/)
+- 静态文件处理: [koa-static](https://www.npmjs.com/package/koa-static) + [koa-mount](https://www.npmjs.com/package/koa-mount)
+- 模板引擎: [nunjucks](https://nunjucks.bootcss.com/)
+- 提交数据处理: [form-data](https://www.npmjs.com/package/form-data) + [formidable](https://www.npmjs.com/package/formidable)
 
 #### 安装 koa-web
 
@@ -10,11 +20,13 @@
 npm i koa-web
 ```
 
-#### 项目配置
+## 项目配置
+
+---
 
 ```js
 const Koa = require("koa");
-const KoaWeb = require('koa-web')
+const KoaWeb = require('koa-web');
 
 const app = new Koa();
 
@@ -72,6 +84,10 @@ app.listen(3000, () => {
 });
 ```
 
+## 基本用法
+
+---
+
 #### 创建主页面
 
 - 默认路径对应 view > path 配置
@@ -82,7 +98,7 @@ app.listen(3000, () => {
   - http://localhost:3000/index
   - http://localhost:3000/index.htm
   - http://localhost:3000/index.html
-- 当cache=false时不需要重启，就可以看到实时效果
+- 当cache=false时不需要重启Koa服务，就可以看到实时效果
 
 #### 静态文件
 
@@ -110,7 +126,7 @@ app.listen(3000, () => {
 <div>{{ sayWorld }}</div>
 ```
 
-###### 更多模板引擎使用 [nunjucks](https://nunjucks.bootcss.com/)
+###### 模板引擎说明文档 [nunjucks](https://nunjucks.bootcss.com/)
 
 ###### /html/hello/world.js
 
@@ -131,12 +147,18 @@ module.exports = async (hd, data, files) => {
 
   // hd.ctx.body = '设置了就只会显示这一段';
   
+  // console.log(hd.ctx.query); // url 传递的参数
+  // console.log(hd.ctx.header); // http 头文件
   // console.log(data); // data == hd.ctx.app.info.data
   // console.log(files); // files == hd.ctx.app.info.files
 
   // hd.ctx.app.info.status: 解析状态
   // hd.ctx.app.info.errMessage: 解析错误提示
   // hd.ctx.app.info.body: 原始POST提交字符串
+  // hd.ctx.app.info.type: Content-Type标记 form、xform、json
+  // form: multipart/form-data
+  // xform: application/x-www-form-urlencoded
+  // json: application/json
   // console.log(hd.ctx.app.info); 
 
   // 设置模板页面中函数（nunjucks模板）
@@ -214,7 +236,9 @@ module.exports = async (hd) => {
 }
 ```
 
-#### 页面源码效果DEMO
+## 页面源码效果DEMO
+
+---
 
 ###### 访问页面 http://localhost:3000/hello/world 源码如下
 
@@ -334,3 +358,7 @@ app.listen(3000, () => {
 <div>hello</div>
 <div>MyWorld</div>
 ```
+
+## HTTP快捷应用
+
+---

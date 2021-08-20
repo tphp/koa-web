@@ -9,6 +9,7 @@
   "dependencies": {
     "nunjucks": "^3.0.0",
     "formidable": "^1.2.2",
+    "form-data": "^4.0.0",
     "koa": "^2.13.0",
     "koa-static": "^5.0.0",
     "koa-mount": "^4.0.0"
@@ -18,6 +19,7 @@
     "web",
     "nunjucks",
     "formidable",
+    "formdata",
     "layout",
     "static",
     "mount",

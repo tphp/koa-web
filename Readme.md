@@ -71,6 +71,14 @@ app.use(
         // css: ['hello.css', 'world.css'],
         // layout: "layout.test"
       },
+
+      // 如果不喜欢默认的nunjucks模板引擎， 可以使用render进行重设
+      // template: 模板页面源码
+      // viewData: 渲染的数据
+      // render: (template, viewData) => {
+      //   let ejs = require('ejs');
+      //   return ejs.render(template, viewData);
+      // }
     }
   )
 );

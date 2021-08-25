@@ -75,7 +75,8 @@ app.use(
       // 如果不喜欢默认的nunjucks模板引擎， 可以使用render进行重设
       // template: 模板页面源码
       // viewData: 渲染的数据
-      // render: (template, viewData) => {
+      // info: 如果template不能满足要求，info中有更多信息提供使用
+      // render: (template, viewData, info) => {
       //   let ejs = require('ejs');
       //   return ejs.render(template, viewData);
       // }
@@ -491,10 +492,7 @@ module.exports = async (hd) => {
   ]);
 
   // Object 对象模式
-  let {
-    a,
-    b
-  } = await hd.httpAll({
+  let { a, b } = await hd.httpAll({
     a: {
       url: 'http://localhost:3000/test/call?flag=a'
     },

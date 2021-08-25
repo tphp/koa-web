@@ -72,13 +72,28 @@ app.use(
         // layout: "layout.test"
       },
 
-      // 如果不喜欢默认的nunjucks模板引擎， 可以使用render进行重设
+      // 如果不习惯默认的nunjucks模板引擎， 可以使用render进行重设
       // template: 模板页面源码
       // viewData: 渲染的数据
       // info: 如果template不能满足要求，info中有更多信息提供使用
       // render: (template, viewData, info) => {
+      //   // ****字符串模式****
       //   let ejs = require('ejs');
       //   return ejs.render(template, viewData);
+
+      //   // *****文件模式*****
+      //   let error;
+      //   let html;
+      //   ejs.renderFile(info.filename, viewData, (e, h) => {
+      //     error = e;
+      //     html = h;
+      //   });
+
+      //   if (error) {
+      //     info.handle.ctx.response.status = 500;
+      //     return error['message'];
+      //   }
+      //   return html;
       // }
     }
   )

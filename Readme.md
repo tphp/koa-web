@@ -60,7 +60,6 @@ app.use(
 
       // 错误页面默认设置，只支持 404 和 500 错误
       errors: {
-        // 也可以 404: "errors.404"， 效果相同
         404: "errors/404",
         500: "errors/500"
       },
@@ -69,8 +68,14 @@ app.use(
       json: {
         // js: "hello.js",
         // css: ['hello.css', 'world.css'],
-        // layout: "layout.test"
+        // layout: "layout/test"
       },
+
+      // 扩展页面默认Content-Type设置，如果不设置则以mime-types扩展名为准
+      // extTypes: {
+      //   // 例如 /hello/world.txt 的设置 Content-Type："text/plan"
+      //   txt: "text/plan"
+      // }
 
       // 如果不习惯默认的nunjucks模板引擎， 可以使用render进行重设
       // template: 模板页面源码
@@ -184,6 +189,9 @@ module.exports = async (hd, data, files) => {
 
   // 设置模板页面中函数（nunjucks模板）
   hd.view('sayHello', "hello hello!");
+  // 多函数设置
+  // hd.view({sayHello: "hello hello!", sayOther: "hello other"});
+  // 获取函数
   // console.log(hd.getView());
   // console.log(hd.getView('sayHello'));
 
@@ -194,7 +202,6 @@ module.exports = async (hd, data, files) => {
   // console.log(hd.getKeywords());
   // hd.description('描述');
   // console.log(hd.getDescription());
-
 
   // 动态设置页面内CSS和JS
   hd.style(".body{color:#F00;}"); // style只能在head中
@@ -209,6 +216,10 @@ module.exports = async (hd, data, files) => {
   hd.js('/static/j1.js');
   hd.js(['/static/j2.js', '@/static/j3.js']);
 
+  // 设置页面缓存10秒
+  // hd.age(10);
+  // 如不设置，hd.age()， 则页面缓存默认是 staticMaxage 配置值
+
   return {
     sayWorld: "hello world!"
   };
@@ -222,7 +233,7 @@ module.exports = async (hd, data, files) => {
 
 ```json
 {
-  "layout": "hello.layout",
+  "layout": "hello/layout",
   "css": "/static/abc.css",
   "js": [
     "/static/abc.js",
@@ -298,6 +309,14 @@ module.exports = async (hd) => {
 </html>
 ```
 
+###### 访问页面 http://localhost:3000/hello/world.json 源码如下
+
+```json
+{"sayWorld":"hello world!"}
+```
+
+- 扩展名.json不会渲染/html/hello/world.html页面
+
 #### 页面之间的调用 call
 
 ###### 创建调用页面
@@ -327,7 +346,7 @@ module.exports = async (hd) => {
 ```js
 module.exports = async (hd) => {
   return await hd.call(
-    'test.data', // 或 'test/data'
+    'test/data',
     {
       sayWorld: "MyWorld"
     }
@@ -341,7 +360,7 @@ module.exports = async (hd) => {
 
 ```js
 const Koa = require("koa");
-const KoaWeb = require('koa-web')
+const KoaWeb = require('koa-web');
 const router = require("koa-router")();
 
 const app = new Koa();
@@ -352,7 +371,7 @@ router.get("/route/web", async (ctx, next) => {
   await next();
   if (!ctx.body) {
     let ret = await ctx.app.call(
-      'test.data', // 或 'test/data'
+      'test/data',
       {
         sayWorld: "MyWorld"
       }
@@ -525,3 +544,102 @@ module.exports = async (hd) => {
   }
 };
 ```
+
+---
+
+## 页面扩展
+
+#### 以下三种模式效果等效（页面默认设置）
+
+- /html/test/demo.js
+
+```js
+// 模式1： 默认模式
+module.exports = async hd => { return "hello ext!"; };
+
+// 模式2：直接返回字符串
+module.exports = 'hello ext!';
+
+// 模式3： 对象模式
+module.exports.html = 'hello ext!';
+module.exports = { html: 'hello ext!' };
+module.exports.html = async hd => { return 'hello ext!'; };
+module.exports = { html: async hd => { return 'hello ext!'; } };
+```
+
+- http://localhost:3000/test/demo
+- http://localhost:3000/test/demo.htm
+- http://localhost:3000/test/demo.html
+- http://localhost:3000/test/demo.json
+- 默认情况下的页面扩展 demo、demo.htm、demo.html、 demo.json 共四种
+- 设置 module.exports.htm 和 module.exports.json 是无效的
+
+#### 自定义页面扩展
+
+```js
+/**
+ * 默认首页
+ * 访问： http://localhost:3000/test/ext
+ * @param {*} hd 
+ * @returns 
+ */
+module.exports.html = (hd) => {
+  hd.css('ext.css');
+  hd.js('ext.js');
+  return "这是首页";
+};
+
+/**
+ * 图片预览
+ * 访问： http://localhost:3000/test/ext.jpg
+ * @param {*} hd 
+ * @returns 
+ */
+module.exports.jpg = (hd) => {
+  // 浏览器页面缓存时间100秒
+  // 不设置则不缓存
+  // 设置 hd.age() 则页面缓存默认是 staticMaxage 配置值
+  hd.age(100);
+
+  // Content-Type 设置
+  // 设置优先级如下
+  // hd.ctx.type > KoaWeb 中的 extTypes > require("mime-types").types['当前扩展: jpg']
+  // hd.ctx.type = 'image/png';
+  
+  // hd.read(): 表示读取文件 /html/test/ext.jpg
+  // hd.read('txt'): 表示读取文件 /html/test/ext.txt
+  return hd.read();
+};
+
+/**
+ * css文件预览
+ * 头文件会自动设置：Content-Type: text/css; charset=utf-8
+ * 页面不会缓存
+ * 访问： http://localhost:3000/test/ext.css
+ */
+module.exports.css = `body{ color:#EEE; }`;
+
+/**
+ * js文件预览
+ * 访问： http://localhost:3000/test/ext.js
+ * 页面会缓存
+ * @param {*} hd 
+ * @returns 
+ */
+module.exports.js = hd => {
+  // 这里hd.age就发挥了很大的作用，设置页面缓存将减少请求获取更好的性能
+  hd.age(1000);
+
+  // 读取文件 /html/test/ext.x.js 文件
+  // return hd.read('x.js');
+  
+  // 注意：一般不使用 hd.read() 读取本文件 /html/test/ext.js
+
+  return `console.log('打印测试');`;
+};
+```
+
+- http://localhost:3000/test/ext
+- http://localhost:3000/test/ext.jpg
+- http://localhost:3000/test/ext.css
+- http://localhost:3000/test/ext.js

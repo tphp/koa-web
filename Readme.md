@@ -12,12 +12,15 @@
 - 模板引擎: [nunjucks](https://nunjucks.bootcss.com/)
 - 提交数据处理: [form-data](https://www.npmjs.com/package/form-data) + [formidable](https://www.npmjs.com/package/formidable)
 
+#### 下载DEMO源码
+
+- [koa-web-demo](https://github.com/tphp/koa-web-demo)
+
 #### 安装 koa-web
 
 ```
 npm i koa-web
 ```
-
 ---
 
 ## 项目配置
@@ -617,7 +620,7 @@ module.exports.jpg = (hd) => {
  * 页面不会缓存
  * 访问： http://localhost:3000/test/ext.css
  */
-module.exports.css = `body{ color:#EEE; }`;
+module.exports.css = `body{ color:#F33; }`;
 
 /**
  * js文件预览

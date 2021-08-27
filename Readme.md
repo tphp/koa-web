@@ -367,7 +367,7 @@ module.exports = async (hd) => {
     // data 解析为：/test/data
     // ./data 解析为：/test/data
     // ../data 解析为：/data
-    // $abc 解析为：/test/dataabc
+    // $.abc 解析为：/test/call.abc
     '/test/data',
     {
       sayWorld: "MyWorld"

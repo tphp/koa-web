@@ -1,6 +1,6 @@
 {
   "name": "koa-web",
-  "version": "1.2.3",
+  "version": "1.0.0",
   "description": "koa web",
   "main": "lib/app.js",
   "author": "tphp",

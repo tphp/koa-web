@@ -1,4 +1,6 @@
-koa-web解决WEB开发者不易发现的困惑，WEB开发原来可以这么玩，用node.js建站，就一个字：绝！
+koa-web解决WEB开发者不易发现的困惑，WEB开发原来可以这么玩。
+
+使用node.js建站也挺不错的。
 
 koa-web保持了koa的扩展性，使koa原有功能不受任何影响。
 

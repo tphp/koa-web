@@ -1,15 +1,23 @@
-## 适合场景
+koa-web解决WEB开发者不易发现的困惑，WEB开发原来可以这么玩，用node.js建站，就一个字：绝！
 
-- WEB页面开发，开发过程中无需重启服务
+koa-web保持了koa的扩展性，使koa原有功能不受任何影响。
+
+---
+
+## 应用场景
+
+- 开发WEB页面实时预览效果（无需重启服务）
 - SEO、CSS和JS设置更轻松
-- 简化了GET和POST请求处理
-- 方便处理简单的压力测试
+- 简化GET和POST请求处理
+- 也适用于API、web代理、压力测试
+- 代码层次分明，开发大项目优势明显
+- 更多不确定的用途可能也会在这里 (待发现...)
 
 #### 依赖包
 
 - 应用框架: [koa](https://koa.bootcss.com/)
 - 静态文件处理: [koa-static](https://www.npmjs.com/package/koa-static) + [koa-mount](https://www.npmjs.com/package/koa-mount)
-- 模板引擎: [nunjucks](https://nunjucks.bootcss.com/)
+- 模板引擎: [nunjucks](https://nunjucks.bootcss.com/) (也可设置其他模板引擎)
 - 提交数据处理: [form-data](https://www.npmjs.com/package/form-data) + [formidable](https://www.npmjs.com/package/formidable)
 
 #### 下载DEMO源码
@@ -127,7 +135,7 @@ app.listen(3000, () => {
   - http://localhost:3000/index
   - http://localhost:3000/index.htm
   - http://localhost:3000/index.html
-- 当cache=false时不需要重启Koa服务，就可以看到实时效果
+- 当cache=false(默认false)时不需要重启Koa服务，就可以看到实时效果
 
 #### 静态文件
 
@@ -365,6 +373,7 @@ module.exports = async (hd) => {
 ###### 外部使用示例（以koa-route为例）
 
 - 如果koa-web不能满足当下要求时，可与其他路由框架进行结合使用
+- 需要另行安装: npm i koa-router
 
 ```js
 const Koa = require("koa");

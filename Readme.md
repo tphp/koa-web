@@ -630,8 +630,10 @@ module.exports.jpg = (hd) => {
   // hd.ctx.type > KoaWeb 中的 extTypes > require("mime-types").types['当前扩展: jpg']
   // hd.ctx.type = 'image/png';
   
-  // hd.read(): 表示读取文件 /html/test/ext.jpg
-  // hd.read('txt'): 表示读取文件 /html/test/ext.txt
+  // 文件读取模式
+  // hd.read(): /项目根路径/html/test/ext.jpg
+  // hd.read('txt'): /项目根路径/html/test/ext.txt
+  // hd.read('/home/user/test.txt'): 绝对路径：/home/user/test.txt
   return hd.read();
 };
 

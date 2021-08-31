@@ -174,12 +174,9 @@ app.listen(3000, () => {
  * 入口文，hd、data和files都可以不设置
  * 如 module.exports = async () => {}; 也是可以的
  * data和files是通过 require("formidable") 实现
- * hd: 主调用函数
- * @param {*} hd 
- * data: form-data、x-www-form-urlencoded和JSON数据会自动转化为该对象
- * @param {*} data 
- * files: 只有在form-data类型中产生
- * @param {*} files 
+ * @param {*} hd 主调用函数
+ * @param {*} data form-data、x-www-form-urlencoded和JSON数据会自动转化为该对象
+ * @param {*} files 只有在form-data类型中产生
  * @returns 
  */
 module.exports = async (hd, data, files) => {
@@ -199,6 +196,11 @@ module.exports = async (hd, data, files) => {
   // xform: application/x-www-form-urlencoded
   // json: application/json
   // console.log(hd.ctx.app.info); 
+
+  // 获取项目中文件路径: /项目路径/hello.js
+  // console.log(hd.path("hello.js"));
+  // 获取视图中文件路径: /项目路径/html/hello.js
+  // console.log(hd.viewPath("hello.js"));
 
   // 设置模板页面中函数（nunjucks模板）
   hd.view('sayHello', "hello hello!");
@@ -430,6 +432,7 @@ app.listen(3000, () => {
 #### 单个请求实例
 
 - 支持 http 和 https
+- /html/test/http.js
 
 ```js
 
@@ -508,11 +511,21 @@ module.exports = async (hd) => {
     // 超时设置，默认15秒
     timeout: 15000,
 
-    // 数据返回类型，默认full
-    // full: 全部返回，{"status": true, "code": 200, "data": "HTML", "ms": 62}
+    // 数据返回类型，默认full， HTML是String或Buffer
+    // full: 全部返回，{"status": true, "code": 200, "data": HTML, "ms": 62}
     // text：HTML
     // json: JSON.parse("HTML")
-    dataType: 'full'
+    dataType: 'full',
+
+    // 获取二进制，默认为false，如果获取图片之类的须设置为true
+    // 当设置为true时对dataType: "json" 无效
+    // buffer: false,
+
+    // 数据结果调试
+    // index: 请求下标，在httpAll下效果显著
+    // data: 页面信息
+    // debug: (index, data) => {},
+    // debug: async (index, data) => {},
   };
 
   let info = await hd.http(
@@ -527,6 +540,8 @@ module.exports = async (hd) => {
 ```
 
 #### 并发请求实例
+
+- /html/test/httpAll.js
 
 ```js
 /**
@@ -600,6 +615,8 @@ module.exports = { html: async hd => { return 'hello ext!'; } };
 
 #### 自定义页面扩展
 
+- /html/test/ext.js
+
 ```js
 /**
  * 默认首页
@@ -638,6 +655,30 @@ module.exports.jpg = (hd) => {
 };
 
 /**
+ * 获取其他网页图片并展示
+ * 访问： http://localhost:3000/test/ext.png
+ * @param {*} hd 
+ * @returns 
+ */
+module.exports.png = async (hd) => {
+  let info = await hd.http({
+    url: "https://www.baidu.com/img/flexible/logo/pc/result.png",
+    buffer: true
+  });
+
+  // 获取图片成功
+  if (info.code === 200) {
+    return Buffer.from(info.data);
+  }
+
+  // 获取图片失败
+  // 修改掉默认的 image/png
+  hd.ctx.type = "text/plain";
+  
+  return "无效图片!";
+};
+
+/**
  * css文件预览
  * 头文件会自动设置：Content-Type: text/css; charset=utf-8
  * 页面不会缓存
@@ -661,11 +702,16 @@ module.exports.js = hd => {
   
   // 注意：一般不使用 hd.read() 读取本文件 /html/test/ext.js
 
+  // 渲染 /html/test/ext.x.js 文件，默认使用nunjucks模板引擎
+  // read是读取二进制文件，render是强制转换成字符串
+  // return hd.render({ test: "Hello Test!" }, 'x.js');
+
   return `console.log('打印测试');`;
 };
 ```
 
 - http://localhost:3000/test/ext
 - http://localhost:3000/test/ext.jpg
+- http://localhost:3000/test/ext.png
 - http://localhost:3000/test/ext.css
 - http://localhost:3000/test/ext.js

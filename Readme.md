@@ -88,7 +88,27 @@ app.use(
       // extTypes: {
       //   // 例如 /hello/world.txt 的设置 Content-Type："text/plan"
       //   txt: "text/plan"
-      // }
+      // },
+
+      // 扩展页面执行后回调
+      extCalls: {
+        // 访问： http://localhost:3000/任意路径.sh
+        // 同步模式
+        // extData: 调用任意路径下的扩展页面数据
+        sh: (extData, hd, data, files) => {
+          // 优先级高于 extTypes 配置
+          hd.ctx.type = 'text/plain';
+
+          return extData;
+        },
+
+        // 访问： http://localhost:3000/任意路径
+        // 异步模式
+        // 默认页面 htm、html和无扩展
+        // html: async () => {
+        //   return "hello world!";
+        // }
+      },
 
       // 如果不习惯默认的nunjucks模板引擎， 可以使用render进行重设
       // template: 模板页面源码
@@ -112,7 +132,7 @@ app.use(
       //     return error['message'];
       //   }
       //   return html;
-      // }
+      // },
     }
   )
 );
@@ -611,6 +631,8 @@ module.exports = { html: async hd => { return 'hello ext!'; } };
 - http://localhost:3000/test/demo.html
 - http://localhost:3000/test/demo.json
 - 默认情况下的页面扩展 demo、demo.htm、demo.html、 demo.json 共四种
+- 如果要统一控制需使用全局配置中的 extTypes 或 extCalls
+- 全局中可以设置 html 和 json 扩展
 - 设置 module.exports.htm 和 module.exports.json 是无效的
 
 #### 自定义页面扩展

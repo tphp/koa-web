@@ -63,8 +63,39 @@ app.use(
       view: {
         // 视图默认目录 html
         path: "html",
+
         // 视图文件默认扩展名 html， 如 "hello.html"
-        ext: "html"
+        ext: "html",
+
+        // 域名(前缀)绑定路径设置
+        domains: {
+          // 如访问: http://www.hello.myweb.com:90
+          // 实际解析到: myweb90/tools 目录
+          // 相当于 view 中的 path 设置为: html/myweb90/tools
+          // 左边: www.*.{abc}.com:{port}不能混合参数，如 www.*.{abc}{def} 中的 {abc}{def} 将无法解析
+          // 右边: {abc}{port}/tools 可以随意混合参数
+          "www.*.{abc}.com:{port}": "{abc}{port}/tools",
+
+          // 权重1: 域名前缀数量越多，权重越高
+          // 如访问: http://www.a.com:88 将解析到 xyz
+          // 如访问: http://www.b.com:88 将解析到 abc
+          "www:88": "abc",
+          "www.a:88": "xyz",
+
+          // 权重2: 参数越少，权重越高
+          // 如访问: http://www.a.com 将解析到 hello
+          // 如访问: http://www.b.com 将解析到 world
+          "www.a.com": "hello",
+          "www.{name}.com": "world", // 等价于: "www.*.com": "world"
+
+          // 绑定所有域名/IP的90端口， 但权重最低
+          ":90": "path",
+        },
+
+        // 默认解析路径，不支持变量设置，如: {abc}/tpl
+        // 当domains中配对不成功时生效
+        // 默认为空，即根目录 html
+        domainDefault: ""
       },
 
       // 热加载，如果不缓存，每次文件改动会重新加载

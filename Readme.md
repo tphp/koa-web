@@ -72,7 +72,8 @@ app.use(
           // 如访问: http://www.hello.myweb.com:90
           // 实际解析到: myweb90/tools 目录
           // 相当于 view 中的 path 设置为: html/myweb90/tools
-          // 左边: www.*.{abc}.com:{port}不能混合参数，如 www.*.{abc}{def} 中的 {abc}{def} 将无法解析
+          // 左边: www.*.{abc}.com:{port}不能混合参数
+          // 如 www.*.{abc}{def} 中的 {abc}{def} 将无法解析
           // 右边: {abc}{port}/tools 可以随意混合参数
           "www.*.{abc}.com:{port}": "{abc}{port}/tools",
 
@@ -771,3 +772,43 @@ module.exports.js = hd => {
 - http://localhost:3000/test/ext.png
 - http://localhost:3000/test/ext.css
 - http://localhost:3000/test/ext.js
+
+---
+
+## 全局调用
+
+- 全局调用是指与 view 配置中的 domains 无关联调用
+- 全局调用使用 @ 符号为前缀进行设置
+
+```js
+// 域名绑定设置
+// 假设访问: http://www.test.com
+view: {
+  domains: {
+    "www.test.com": "test"
+  }
+}
+
+// layout普通设置
+// 布局路径指向为: /html/test/abc
+json: {
+  "layout": "abc"
+}
+
+// layout全局设置
+// 布局路径指向为: /html/abc
+json: {
+  "layout": "@abc",
+  // "module": "@module",
+  // "view": "@view"
+}
+
+// 全局错误页面
+errors: {
+  404: "@errors/404",
+  500: "@errors/500"
+}
+
+// 全局函数调用
+hd.call("@test")
+```

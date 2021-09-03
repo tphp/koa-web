@@ -1,8 +1,8 @@
-koa-web解决WEB开发者不易发现的困惑，WEB开发原来可以这么玩。
+koa-web
 
-使用node.js建站也挺不错的。
-
-koa-web保持了koa的扩展性，使koa原有功能不受任何影响。
+- 解决WEB开发者不易发现的困惑，WEB开发原来可以这么玩。
+- 可使用koa或者koa-web扩展更多的功能实现。
+- 是全栈开发的桥梁，它将改变繁琐开发的习惯，让代码一目了然。
 
 ---
 
@@ -13,6 +13,7 @@ koa-web保持了koa的扩展性，使koa原有功能不受任何影响。
 - 简化GET和POST请求处理
 - 也适用于API、web代理、压力测试
 - 代码层次分明，开发大项目优势明显
+- 域名灵活绑定路径，适合开发多项目
 - 更多不确定的用途可能也会在这里 (待发现...)
 
 #### 依赖包
@@ -237,6 +238,8 @@ app.listen(3000, () => {
 module.exports = async (hd, data, files) => {
 
   // hd.ctx.body = '设置了就只会显示这一段';
+
+  // console.log(hd.isPost()); // 判断是否是POST提交
   
   // console.log(hd.ctx.query); // url 传递的参数
   // console.log(hd.ctx.header); // http 头文件
@@ -811,4 +814,7 @@ errors: {
 
 // 全局函数调用
 hd.call("@test")
+
+// 全局视图路径
+hd.viewPath("@test")
 ```

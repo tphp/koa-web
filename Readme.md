@@ -512,11 +512,12 @@ module.exports = async (hd) => {
     // 数据代理，支持：get、form、xform、json
     // get 通过浏览器URL和配置url进行合并，其他通过POST和配置data进行合并
     // 默认 {get: false, post: false, header:false}
-    // {get: false, all: true} 等价于 {get: false, post: true, header:true}
+    // {get: false, all: true} 等价于 {get: false, post: true, header:true, method:true}
     proxy: {
       // get: false,
       // post: false,
       // header: false,
+      // method: false,
       all: true
     },
 

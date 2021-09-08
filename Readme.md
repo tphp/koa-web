@@ -537,6 +537,10 @@ module.exports = async (hd) => {
     // 如果不设置，默认以浏览器提交方式一致
     // type: 'json',
 
+    // 如果未设定，默认以type设置自动产生get或post自动匹配
+    // 不区分大小写: GET POST PUT DELETE HEAD 等
+    // method: 'post',
+
     // 上传文件
     files: {
       // 直接以文件路径提交

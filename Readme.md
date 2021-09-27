@@ -841,11 +841,12 @@ const app = new Koa();
 /**
  * setMid: 中间件设置，可叠加，顺序执行
  * setData: 数据设置，可叠加，顺序执行
- * KoaWeb((setMid, setData) => {})
+ * setLoad: koa中间件设置，仅加载一次
+ * KoaWeb((setMid, setData, setLoad) => {})
  * 或者
- * KoaWeb(async (setMid, setData) => {})
+ * KoaWeb(async (setMid, setData, setLoad) => {})
  */
-KoaWeb(async (setMid, setData) => {
+KoaWeb(async (setMid, setData, setLoad) => {
   // 中间件设置
   setMid("mid", (hd, data, files) => {
     hd.app.test = "koa-web";
@@ -885,6 +886,14 @@ KoaWeb(async (setMid, setData) => {
   // 默认扩展页面设置： 空、htm、html扩展页面
   // setMid("html", () => {});
   // setData("html", () => {});
+
+  // 可再次对koa中间件进行设置
+  setLoad(koaApp => {
+    // console.log('此处仅运行一次');
+    koaApp.use(async (ctx, next) => {
+      await next();
+    });
+  });
 });
 
 app.use(KoaWeb({path: __dirname}));

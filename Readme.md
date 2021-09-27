@@ -888,7 +888,9 @@ KoaWeb(async (setMid, setData, setLoad) => {
   // setData("html", () => {});
 
   // 可再次对koa中间件进行设置
-  setLoad(koaApp => {
+  // koaApp: new Koa()
+  // config: koa-web配置
+  setLoad((koaApp, config) => {
     // console.log('此处仅运行一次');
     koaApp.use(async (ctx, next) => {
       await next();

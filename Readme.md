@@ -283,9 +283,11 @@ module.exports = async (hd, data, files) => {
 
   // 动态加载css和js文件
   // 加载css不管加不加@都在head标签中或页面顶部
+  // hd.css('/static/c1.css', {class: "test"}); // 可设置属性
   hd.css('/static/c1.css');
   hd.css(['/static/c2.css', '@/static/c3.css']);
   // 动态js中加@表示在head标签中或页面顶部
+  // hd.js(['/static/j2.js', '@/static/j3.js'], {class: "test"}); // 可设置属性
   hd.js('/static/j1.js');
   hd.js(['/static/j2.js', '@/static/j3.js']);
 
